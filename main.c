@@ -215,33 +215,33 @@ static void ble_evt_handler(ble_evt_t const * p_ble_evt, void * p_context)
         {
             const ble_gap_evt_adv_report_t *p_adv_report = &p_ble_evt->evt.gap_evt.params.adv_report;
             const ble_data_t *data = &p_adv_report->data;
-            switch( ble_advdata_name_find(data->p_data, data->len, m_WL_periph_name)){
-                case m_WL_periph_name:
-                    {
-                    uint8_t *mfd_data = ble_advdata_parse(data->p_data, data->len, BLE_GAP_AD_TYPE_MANUFACTURER_SPECIFIC_DATA);
-                    if(mfd_data[2] > 0){
-                        NRF_LOG_INFO("WL cal:%d, %d", mfd_data[2], mfd_data[3]);
-                    }
-                    else {
-                        NRF_LOG_INFO("WL data:%d", mfd_data[3]);
-                    }
-                } break;
-
-                case m_FA_periph_name:
+    
+            if(ble_advdata_name_find(data->p_data, data->len, m_WL_periph_name))
+            {
+                uint8_t *mfd_data = ble_advdata_parse(data->p_data, data->len, BLE_GAP_AD_TYPE_MANUFACTURER_SPECIFIC_DATA);
+                if(mfd_data[2] > 0)
                 {
-                    uint8_t *mfd_data = ble_advdata_parse(data->p_data, data->len, BLE_GAP_AD_TYPE_MANUFACTURER_SPECIFIC_DATA);
-                    NRF_LOG_INFO("FA data:%d", mfd_data[2]);
-                } break;
-
-                case m_DS_periph_name:
+                    NRF_LOG_INFO("WL cal:%d, %d", mfd_data[2], mfd_data[3]);
+                }
+                else 
                 {
-                    uint8_t *mfd_data = ble_advdata_parse(data->p_data, data->len, BLE_GAP_AD_TYPE_MANUFACTURER_SPECIFIC_DATA);
-                    NRF_LOG_INFO("DS data:%d", mfd_data[2]);
-                } break;
-
-                default: //No implementation needed
-                    break;
+                    NRF_LOG_INFO("WL data:%d", mfd_data[3]);
+                }
             }
+
+            else if(ble_advdata_name_find(data->p_data, data->len, m_FA_periph_name))
+            {
+                uint8_t *mfd_data = ble_advdata_parse(data->p_data, data->len, BLE_GAP_AD_TYPE_MANUFACTURER_SPECIFIC_DATA);
+                NRF_LOG_INFO("FA data:%d", mfd_data[2]);
+            }
+
+            else if(ble_advdata_name_find(data->p_data, data->len, m_DS_periph_name))
+            {
+                uint8_t *mfd_data = ble_advdata_parse(data->p_data, data->len, BLE_GAP_AD_TYPE_MANUFACTURER_SPECIFIC_DATA);
+                NRF_LOG_INFO("DS data:%d", mfd_data[2]);
+            }
+
+        
         }    break;
         
         case BLE_GAP_EVT_CONNECTED:
