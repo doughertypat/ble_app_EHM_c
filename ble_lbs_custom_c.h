@@ -100,6 +100,8 @@ NRF_SDH_BLE_OBSERVERS(_name ## _obs,                                            
 #define LBS_UUID_SERVICE     0x1901
 #define LBS_UUID_BUTTON_CHAR 0x2b01
 #define LBS_UUID_LED_CHAR    0x2b02
+#define LBS_UUID_FA_CHAR     0x2b03
+#define LBS_UUID_DS_CHAR     0x2b04
 
 
 /**@brief LBS Client event type. */
@@ -121,6 +123,8 @@ typedef struct
     uint16_t button_cccd_handle;  /**< Handle of the CCCD of the Button characteristic. */
     uint16_t button_handle;       /**< Handle of the Button characteristic as provided by the SoftDevice. */
     uint16_t led_handle;          /**< Handle of the LED characteristic as provided by the SoftDevice. */
+    uint16_t fa_handle;
+    uint16_t ds_handle;
 } lbs_db_t;
 
 /**@brief LED Button Event structure. */

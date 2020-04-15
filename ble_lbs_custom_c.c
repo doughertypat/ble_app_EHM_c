@@ -145,10 +145,20 @@ void ble_lbs_on_db_disc_evt(ble_lbs_c_t * p_ble_lbs_c, ble_db_discovery_evt_t co
             {
                 case LBS_UUID_LED_CHAR:
                     evt.params.peer_db.led_handle = p_char->characteristic.handle_value;
+                    NRF_LOG_DEBUG("Char found: %x", p_char->characteristic.uuid.uuid)
                     break;
                 case LBS_UUID_BUTTON_CHAR:
                     evt.params.peer_db.button_handle      = p_char->characteristic.handle_value;
                     evt.params.peer_db.button_cccd_handle = p_char->cccd_handle;
+                    NRF_LOG_DEBUG("Char found: %x", p_char->characteristic.uuid.uuid)
+                    break;
+                case LBS_UUID_FA_CHAR:
+                    evt.params.peer_db.fa_handle = p_char->characteristic.handle_value;
+                    NRF_LOG_DEBUG("Char found: %x", p_char->characteristic.uuid.uuid)
+                    break;
+                case LBS_UUID_DS_CHAR:
+                    evt.params.peer_db.ds_handle = p_char->characteristic.handle_value;
+                    NRF_LOG_DEBUG("Char found: %x", p_char->characteristic.uuid.uuid)
                     break;
 
                 default:
@@ -156,7 +166,7 @@ void ble_lbs_on_db_disc_evt(ble_lbs_c_t * p_ble_lbs_c, ble_db_discovery_evt_t co
             }
         }
 
-        NRF_LOG_DEBUG("LED Button Service discovered at peer.");
+        NRF_LOG_DEBUG("Equine Service discovered at peer.");
         //If the instance was assigned prior to db_discovery, assign the db_handles
         if (p_ble_lbs_c->conn_handle != BLE_CONN_HANDLE_INVALID)
         {

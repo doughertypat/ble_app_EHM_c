@@ -95,8 +95,9 @@ NRF_BLE_GQ_DEF(m_ble_gatt_queue,                                /**< BLE GATT Qu
                NRF_SDH_BLE_CENTRAL_LINK_COUNT,
                NRF_BLE_GQ_QUEUE_SIZE);
 
-static char const m_target_periph_name[] = "WLSensor";     /**< Name of the device we try to connect to. This name is searched in the scan report data*/
-
+static char const m_WL_periph_name[] = "WLSensor";     /**< Name of the devices we try to connect to. This name is searched in the scan report data*/
+static char const m_FA_periph_name[] = "FASensor";
+static char const m_DS_periph_name[] = "DSSensor";
 
 /**@brief Function to handle asserts in the SoftDevice.
  *
@@ -214,9 +215,14 @@ static void ble_evt_handler(ble_evt_t const * p_ble_evt, void * p_context)
         {
             const ble_gap_evt_adv_report_t *p_adv_report = &p_ble_evt->evt.gap_evt.params.adv_report;
             const ble_data_t *data = &p_adv_report->data;
-            if( ble_advdata_name_find(data->p_data, data->len, m_target_periph_name)){
+            if( ble_advdata_name_find(data->p_data, data->len, m_WL_periph_name)){
                 uint8_t *mfd_data = ble_advdata_parse(data->p_data, data->len, BLE_GAP_AD_TYPE_MANUFACTURER_SPECIFIC_DATA);
-                NRF_LOG_INFO("WL cal:%d, %d", mfd_data[2], mfd_data[3]);
+                if(mfd_data[2] > 0){
+                    NRF_LOG_INFO("WL cal:%d, %d", mfd_data[2], mfd_data[3]);
+                }
+                else {
+                    NRF_LOG_INFO("WL data:%d", mfd_data[3]);
+                }
             }
         }    break;
         
@@ -485,8 +491,14 @@ static void scan_init(void)
     // Setting filters for scanning.
     err_code = nrf_ble_scan_filters_enable(&m_scan, NRF_BLE_SCAN_NAME_FILTER, false);
     APP_ERROR_CHECK(err_code);
-
-    err_code = nrf_ble_scan_filter_set(&m_scan, SCAN_NAME_FILTER, m_target_periph_name);
+    //Add water intake monitor name
+    err_code = nrf_ble_scan_filter_set(&m_scan, SCAN_NAME_FILTER, m_WL_periph_name);
+    APP_ERROR_CHECK(err_code);
+    //Add fire alarm name
+    err_code = nrf_ble_scan_filter_set(&m_scan, SCAN_NAME_FILTER, m_FA_periph_name);
+    APP_ERROR_CHECK(err_code);
+    //Add door sensor name
+    err_code = nrf_ble_scan_filter_set(&m_scan, SCAN_NAME_FILTER, m_DS_periph_name);
     APP_ERROR_CHECK(err_code);
 }
 
